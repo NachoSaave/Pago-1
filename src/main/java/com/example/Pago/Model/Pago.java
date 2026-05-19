@@ -23,4 +23,9 @@ public class Pago {
     private String metodoPago;
 
     private String estado;
+
+    private Long clienteId;
+    private String clienteNombre;
+    private String clienteTelefono;
+    
 }

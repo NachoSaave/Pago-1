@@ -1,30 +1,45 @@
 package com.example.Pago.Controller;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import java.util.List;
 
-import com.example.Pago.Model.Pago;
-import com.example.Pago.Service.pagoService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import lombok.RequiredArgsConstructor;
+
+import com.example.Pago.Model.Pago;
+import com.example.Pago.Model.DTO.PagoResponseDTO;
+import com.example.Pago.Service.pagoService;
 
 @RestController
 @RequestMapping("/api/v1/pagos")
 @RequiredArgsConstructor
 public class pagoController {
 
- private final pagoService service;
+    private final pagoService service;
 
+    // CREAR PAGO
     @PostMapping
-    public ResponseEntity<Pago> save(
-            @RequestBody Pago pago){
+    public ResponseEntity<PagoResponseDTO> save(@RequestBody Pago pago) {
+        return ResponseEntity.ok(service.proceso(pago));
+    }
 
-        return ResponseEntity.ok(
-                service.Proceso(pago)
-        );
+    // LISTAR
+    @GetMapping
+    public ResponseEntity<List<PagoResponseDTO>> listar() {
+        return ResponseEntity.ok(service.listar());
+    }
+
+    //  BUSCAR POR ID
+    @GetMapping("/{id}")
+    public ResponseEntity<?> buscar(@PathVariable Long id) {
+
+        PagoResponseDTO pago = service.buscarPorId(id);
+
+        if (pago == null) {
+            return ResponseEntity.badRequest().body("No encontrado");
+        }
+
+        return ResponseEntity.ok(pago);
     }
 }
-
